@@ -185,7 +185,7 @@ API 호출로 처리하면 연쇄적으로 장애가 발생할 수 있다.
 
 ## 이벤트 전파
 
-![msa](images/Untitled%201.png)
+![msa](images/Untitled 1.png)
 
 [우아콘2020] 배달의민족 마이크로서비스 여행기
 
