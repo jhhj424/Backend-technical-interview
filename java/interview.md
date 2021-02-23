@@ -32,3 +32,56 @@
 
 - 접근 제어자를 사용하는 이유는 클래스의 내부에 선언된 데이터를 보호하기 위해서이다. 데이터가 유효한 값을 유지하도록 또는 비밀번호와 같은 데이터를 외부에서 함부로 변경하지 못하도록 하기 위해서는 외부로부터의 접근을 제한하는 것이 필요하다.
 - 이것을 데이터 감추기라고 하며 객체지향개념에선 캡슐화(encapsulation)이라 한다.
+
+
+## 자바에서 StringBuffer와 StringBuilder의 차이점
+
+문자열 조합을 할 때 프로그램 성능을 위해 String 대신에 사용하는 대표적인 두 클래스
+
+StringBuffer
+- Thread-Safe 함
+
+StringBuilder
+- Thread-Safe 하지 않음
+- StringBuffer보다 성능이 좋음
+
+그럼 멀티쓰레드 환경에서는 StringBuilder를 아예 쓰면 안되는 것일까?
+
+**멀티쓰레드 환경에서 StringBuilder를 쓰면 안되는 예**
+
+이렇게 전역변수로 StringBuilder를 선언하면 여러 쓰레드에서 동시에 접근하게되고 StringBuilder는 쓰레드에 안전하지 않기 때문에 자연스럽게 문제가 생긴다.
+
+이런 코드를 써야할 경우가 있다면 StringBuffer를 사용해야한다.
+ 
+```
+public class Service {
+	static StringBuilder sb = new StringBuilder();
+
+	public void do() {
+		sb.append("추가");
+		sb.append("추가");
+	}
+}
+```
+
+**멀티쓰레드 환경에서 StringBuilder를 써도 되는 예** 
+
+지역변수로 StringBuilder를 선언하면 쓰레드가 메소드를 수행할 때 객체가 생성되고 쓰레드마다 서로 다른 객체를 사용하게 된다.
+
+그렇기 때문에 멀티쓰레드 환경에서 아래와 같이 코딩을 하여도 전혀 문제가 없고, 문자열 조합이 무지하게 많이 발생하는 경우 StringBuffer를 사용할 때보다 성능상으로 유리할 수 있다.
+ 
+```
+public class Service {
+	public void do() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("추가");
+		sb.append("추가");
+	}
+}
+```
+
+문자열 조합이 무지하게 많이 발생한다는 정도는 짧은 문자열 기준으로 적어도 1만번 이상의 연산이 수행되어야 하는 정도이다.
+
+1000만번 이상부터 차이가 확실히 난다라고 제시할 수 있는 수준인 것 같다.
+
+연산이 많지 않은 경우는 StringBuffer나 StringBuilder나 차이가 거의 없으므로 굳이 성능적인 면 생각하지 않고 StringBuffer로 통일하여 써도 상관은 없을 것 같다.
